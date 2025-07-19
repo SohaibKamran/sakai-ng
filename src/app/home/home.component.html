@@ -1,0 +1,31 @@
+<div class="container mx-auto p-4">
+      <h1 class="text-4xl font-bold mb-8 text-center text-primary">Latest Blog Posts</h1>
+
+      <div *ngIf="loading" class="text-center text-lg text-muted-color">Loading posts...</div>
+
+      <div *ngIf="!loading && posts.length === 0" class="text-center text-lg text-muted-color">No posts found.</div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <p-card *ngFor="let post of posts" [header]="post.title" styleClass="p-2">
+          <ng-template pTemplate="subtitle">
+            By {{ post.author.name }} on {{ post.createdAt | date:'mediumDate' }}
+          </ng-template>
+          <p class="mb-3 text-muted-color">
+            {{ post.excerpt }}
+          </p>
+          <ng-template pTemplate="footer">
+            <p-button [routerLink]="['/posts', post.id]" label="Read More" icon="pi pi-book"></p-button>
+          </ng-template>
+        </p-card>
+      </div>
+
+      <p-paginator
+        *ngIf="totalRecords > limit"
+        (onPageChange)="onPageChange($event)"
+        [rows]="limit"
+        [totalRecords]="totalRecords"
+        [rowsPerPageOptions]="[5, 10, 20]"
+        [first]="(page - 1) * limit"
+        class="mt-8 justify-content-center"
+      ></p-paginator>
+    </div>

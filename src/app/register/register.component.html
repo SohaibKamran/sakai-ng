@@ -1,0 +1,42 @@
+<p-toast></p-toast> <app-floating-configurator />
+    <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
+      <div class="flex flex-col items-center justify-center">
+        <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
+          <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
+            <div class="text-center mb-8">
+              <h2 class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Register</h2>
+              <span class="text-muted-color font-medium">Create your account</span>
+            </div>
+
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+              <div>
+                <label for="name" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Name</label>
+                <input pInputText id="name" type="text" formControlName="name" placeholder="Your Name" class="w-full md:w-[30rem] mb-2" />
+                @if (registerForm.get('name')?.invalid && (registerForm.get('name')?.dirty || registerForm.get('name')?.touched)) {
+                  <small class="p-error block mb-4">Name is required.</small>
+                }
+
+                <label for="email" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4">Email</label>
+                <input pInputText id="email" type="email" formControlName="email" placeholder="Email address" class="w-full md:w-[30rem] mb-2" />
+                @if (registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)) {
+                  <small class="p-error block mb-4">Valid email is required.</small>
+                }
+
+                <label for="password" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2 mt-4">Password</label>
+                <p-password id="password" formControlName="password" placeholder="Password" [toggleMask]="true" styleClass="mb-4" [fluid]="true" [feedback]="false"></p-password>
+                @if (registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)) {
+                  <small class="p-error block mb-4">Password is required (min 6 characters).</small>
+                }
+
+                <p-button label="Register" styleClass="w-full" type="submit" [disabled]="registerForm.invalid || loading"></p-button>
+              </div>
+            </form>
+
+            <div class="flex justify-content-center mt-5">
+              <span class="text-muted-color">Already have an account? </span>
+              <a [routerLink]="['/login']" class="font-medium text-primary no-underline ml-2 cursor-pointer">Login</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

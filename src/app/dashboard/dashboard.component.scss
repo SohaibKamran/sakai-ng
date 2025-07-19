@@ -1,0 +1,16 @@
+.container {
+      max-width: 1200px;
+    }
+    :host ::ng-deep .p-card .p-card-header,
+    :host ::ng-deep .p-card .p-card-title {
+      font-size: 1.75rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+    :host ::ng-deep .p-datatable .p-datatable-header,
+    :host ::ng-deep .p-datatable .p-paginator {
+      background-color: var(--surface-100); /* Lighter background for header/paginator */
+    }
+    .text-primary-500:hover {
+      text-decoration: underline;
+    }

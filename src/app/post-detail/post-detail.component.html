@@ -1,0 +1,19 @@
+<div class="container mx-auto p-4">
+    <div *ngIf="loading" class="text-center text-lg text-muted-color">Loading post...</div>
+
+    <div *ngIf="!loading && !post" class="text-center text-lg text-muted-color">Post not found.</div>
+
+    <div *ngIf="post" class="bg-surface-0 dark:bg-surface-900 rounded-lg shadow-lg p-6">
+        <h1 class="text-4xl font-bold mb-4 text-primary">{{ post.title }}</h1>
+        <div class="text-muted-color mb-6">
+            By <span class="font-medium">{{ post.author.name }}</span> on {{ post.createdAt | date:'longDate' }}
+        </div>
+
+        <div class="prose dark:prose-invert max-w-none" [innerHtml]="postBodySafeHtml"></div>
+
+        <div class="mt-8 text-center">
+            <button pButton label="Back to Blogs" icon="pi pi-arrow-left" [routerLink]="['/blogs']"
+                class="p-button-outlined"></button>
+        </div>
+    </div>
+</div>

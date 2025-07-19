@@ -1,0 +1,85 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="1000"></p-confirmDialog>
+
+<app-floating-configurator />
+<div class="container mx-auto p-4">
+  <h1 class="text-4xl font-bold mb-8 text-center text-primary">Your Dashboard</h1>
+
+  <p-card header="User Information" styleClass="mb-6">
+    <div *ngIf="currentUser()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div><strong>Name:</strong> {{ currentUser()!.name }}</div>
+      <div><strong>Email:</strong> {{ currentUser()!.email }}</div>
+      <div><strong>Role:</strong> {{ currentUser()!.role }}</div>
+      @if (currentUser()!.role === 'USER') {
+      <div>
+        <strong>Author Request Status:</strong>
+        <p-tag [value]="currentUser()!.authorRequestStatus || 'Not Requested'"
+          [severity]="getAuthorRequestStatusSeverity(currentUser()!.authorRequestStatus)">
+        </p-tag>
+      </div>
+      @if (currentUser()!.authorRequestStatus !== 'PENDING' && currentUser()!.authorRequestStatus !== 'APPROVED') {
+      <div class="col-span-2 mt-4">
+        <p-button label="Request Author Role" icon="pi pi-briefcase" (click)="onRequestAuthorRole()"
+          [loading]="requestingAuthorRole()" [disabled]="requestingAuthorRole()"></p-button>
+      </div>
+      } @else if (currentUser()!.authorRequestStatus === 'APPROVED') {
+      <div class="col-span-2 mt-4 text-success-500 font-medium">
+        You are an approved Author! You can now manage your posts.
+      </div>
+      }
+      }
+      <div class="col-span-2 mt-4">
+        <p-button label="Logout" icon="pi pi-briefcase" (click)="logout()"></p-button>
+      </div>
+    </div>
+    <div *ngIf="!currentUser()" class="text-muted-color">Loading user data...</div>
+  </p-card>
+
+  @if (currentUser() && (currentUser()!.role === 'AUTHOR' || currentUser()!.role === 'ADMIN')) {
+  <p-card header="Manage Your Blog Posts" styleClass="mb-6">
+    <div class="flex justify-content-end mb-4">
+      <p-button label="Create New Blog" icon="pi pi-plus" [routerLink]="['/create-post']"></p-button>
+    </div>
+
+    <p-table [value]="userPosts()" [paginator]="true" [rows]="limit()" [totalRecords]="totalRecords()"
+      (onPage)="onPageChange($event)" [lazy]="true" [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[5, 10, 20]"
+      [loading]="loadingPosts()" styleClass="p-datatable-gridlines" [tableStyle]="{'min-width': '50rem'}">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="title" style="width: 40%">Title <p-sortIcon field="title"></p-sortIcon></th>
+          <th pSortableColumn="published" style="width: 15%">Status <p-sortIcon field="published"></p-sortIcon></th>
+          <th pSortableColumn="createdAt" style="width: 20%">Created At <p-sortIcon field="createdAt"></p-sortIcon></th>
+          <th style="width: 25%" class="text-center">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-post>
+        <tr>
+          <td>
+            <a [routerLink]="['/posts', post.id]"
+              class="text-primary-500 hover:text-primary-600 font-medium no-underline">
+              {{ post.title }}
+            </a>
+          </td>
+          <td>
+            <p-tag [value]="post.published ? 'Published' : 'Draft'"
+              [severity]="post.published ? 'success' : 'warning'"></p-tag>
+          </td>
+          <td>{{ post.createdAt | date:'medium' }}</td>
+          <td class="text-center">
+            <p-button icon="pi pi-pencil" styleClass="p-button-sm p-button-info mr-2"
+              [routerLink]="['/edit-post', post.id]" tooltipPosition="top" pTooltip="Edit Post"></p-button>
+            <p-button icon="pi pi-trash" styleClass="p-button-sm p-button-danger" (click)="confirmDelete(post)"
+              tooltipPosition="top" pTooltip="Delete Post"></p-button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" class="text-center">No posts found for your account. Start by creating one!</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+  }
+</div>
