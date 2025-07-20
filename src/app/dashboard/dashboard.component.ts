@@ -4,9 +4,9 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 
 // Services
-import { AuthService } from '../services/auth.service';
-import { Post, PaginatedPostsResponse, PostService } from '../services/post.service';
-import { UsersService, User, PaginatedUsersResponse } from '../services/users.service'; // Import User and PaginatedUsersResponse
+import { AuthService } from '../features/shared/services/auth.service';
+import { Post, PaginatedPostsResponse, PostService } from '../features/shared/services/post.service';
+import { UsersService, User, PaginatedUsersResponse } from '../features/shared/services/users.service'; // Import User and PaginatedUsersResponse
 
 // PrimeNG imports
 import { ButtonModule } from 'primeng/button';

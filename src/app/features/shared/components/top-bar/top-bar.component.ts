@@ -13,9 +13,9 @@ import { TagModule } from 'primeng/tag'; // For role status tag
 import { TooltipModule } from 'primeng/tooltip'; // For tooltip on avatar/status
 
 // Services
-import { AuthService } from '../services/auth.service';
-import { UsersService } from '../services/users.service';
-import { LayoutService } from '../layout/service/layout.service';
+import { AuthService } from '../../services/auth.service';
+import { UsersService } from '../../services/users.service';
+import { LayoutService } from '../../../../layout/service/layout.service';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 // Assuming LayoutService exists in your application, adjust path if necessary
 

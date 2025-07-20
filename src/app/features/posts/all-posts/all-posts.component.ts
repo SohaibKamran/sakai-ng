@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Post, PaginatedPostsResponse, PostService } from '../services/post.service';
+import { Post, PaginatedPostsResponse, PostService } from '../../shared/services/post.service';
 import { CommonModule, DatePipe } from '@angular/common'; // Import CommonModule for ngFor, DatePipe for formatting
 import { RouterModule } from '@angular/router'; // For routerLink
 import { ButtonModule } from 'primeng/button';
@@ -7,7 +7,7 @@ import { PaginatorModule } from 'primeng/paginator'; // For pagination UI
 import { CardModule } from 'primeng/card'; // For post cards
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-all-posts',
   standalone: true,
   imports: [
     CommonModule,
@@ -17,10 +17,10 @@ import { CardModule } from 'primeng/card'; // For post cards
     PaginatorModule,
     CardModule
   ],
-  templateUrl: './home.component.html',
-  styleUrl:'./home.component.scss'
+  templateUrl: './all-posts.component.html',
+  styleUrl:'./all-posts.component.scss'
 })
-export class HomeComponent implements OnInit {
+export class AllPostsComponent implements OnInit {
   private postService = inject(PostService);
 
   posts: Post[] = [];

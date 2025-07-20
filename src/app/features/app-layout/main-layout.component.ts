@@ -1,8 +1,8 @@
 // frontend/src/app/main-layout/main-layout.component.ts
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TopBarComponent } from '../top-bar/top-bar.component'; // Import the new TopBarComponent
-import { AppFloatingConfigurator } from '../layout/component/app.floatingconfigurator';
+import { TopBarComponent } from '../shared/components/top-bar/top-bar.component'; // Import the new TopBarComponent
+import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
 
 @Component({
   selector: 'app-main-layout',

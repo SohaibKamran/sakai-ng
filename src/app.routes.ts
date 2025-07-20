@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
 import { Notfound } from './app/pages/notfound/notfound';
-import { authGuard, authGuardChild, publicGuard } from './app/guards/auth.guard'; // Import all guards
-import { CreatePostComponent } from './app/create-post/create-post.component';
+import { authGuard, publicGuard } from './app/features/shared/guards/auth.guard'; // Import all guards
+import { CreatePostComponent } from './app/features/posts/create-post/create-post.component';
 import { DashboardComponent } from './app/dashboard/dashboard.component';
-import { HomeComponent } from './app/home/home.component';
-import { Login } from './app/login';
-import { PostDetailComponent } from './app/post-detail/post-detail.component';
-import { RegisterComponent } from './app/register/register.component';
-import { MainLayoutComponent } from './app/main-layout/main-layout.component';
+import { AllPostsComponent } from './app/features/posts/all-posts/all-posts.component';
+import { PostDetailComponent } from './app/features/posts/post-detail/post-detail.component';
+import { RegisterComponent } from './app/features/auth/register/register.component';
+import { MainLayoutComponent } from './app/features/app-layout/main-layout.component';
+import { Login } from './app/features/auth/login/login';
 
 export const appRoutes: Routes = [
     { path: '', redirectTo: '/post', pathMatch: 'full' },
@@ -15,7 +15,7 @@ export const appRoutes: Routes = [
         path: '', component: MainLayoutComponent, children: [
             {
                 path: 'post',
-                component: HomeComponent, // Use component for standalone
+                component: AllPostsComponent, // Use component for standalone
             },
             {
                 path: 'posts/:id', // Route for individual posts

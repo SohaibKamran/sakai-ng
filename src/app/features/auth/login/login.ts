@@ -10,8 +10,8 @@ import { RippleModule } from 'primeng/ripple';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common'; // Important for @if and other common directives
-import { AppFloatingConfigurator } from './layout/component/app.floatingconfigurator';
-import { AuthService } from './services/auth.service';
+import { AppFloatingConfigurator } from '../../../layout/component/app.floatingconfigurator';
+import { AuthService } from '../../shared/services/auth.service';
 
 // Assuming AppFloatingConfigurator path is correct relative to this file
 

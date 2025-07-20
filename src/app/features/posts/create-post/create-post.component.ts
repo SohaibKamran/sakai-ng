@@ -5,8 +5,8 @@ import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Services
-import { PostService, Post } from '../services/post.service';
-import { AuthService } from '../services/auth.service';
+import { PostService, Post } from '../../shared/services/post.service';
+import { AuthService } from '../../shared/services/auth.service';
 
 // PrimeNG imports (ensure these are installed)
 import { ButtonModule } from 'primeng/button';

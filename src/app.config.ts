@@ -8,7 +8,7 @@ import Aura from '@primeng/themes/aura';
 import { providePrimeNG } from 'primeng/config';
 
 import { appRoutes } from './app.routes';
-import { authInterceptor } from './app/auth.interceptor';
+import { authInterceptor } from './app/features/shared/interceptor/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
     providers: [

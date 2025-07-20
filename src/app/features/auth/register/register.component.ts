@@ -8,8 +8,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 // import { UsersService } from '../services/users.service'; // REMOVE this import
-import { AppFloatingConfigurator } from '../layout/component/app.floatingconfigurator';
-import { AuthService } from '../services/auth.service'; // Keep AuthService
+import { AppFloatingConfigurator } from '../../../layout/component/app.floatingconfigurator';
+import { AuthService } from '../../shared/services/auth.service'; // Keep AuthService
 
 @Component({
   selector: 'app-register',
