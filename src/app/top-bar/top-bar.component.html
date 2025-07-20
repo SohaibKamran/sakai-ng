@@ -27,7 +27,7 @@
 
         <span class="font-medium text-lg mr-2 hidden md:block">{{ currentUser()?.name || currentUser()?.email }}</span>
         <p-toggleswitch  (onChange)="toggleDarkMode()"></p-toggleswitch>
-        <p-avatar [label]="getUserInitials(currentUser())" styleClass="mr-2" size="large" shape="circle"
+        <p-avatar [label]="getUserInitials(currentUser()?.name)" styleClass="mr-2" size="large" shape="circle"
             [style]="{'background-color': '#9c27b0', 'color': '#ffffff', 'cursor': 'pointer'}"
             (click)="menu.toggle($event)" [pTooltip]="currentUser()?.name || currentUser()?.email"
             tooltipPosition="bottom"></p-avatar>

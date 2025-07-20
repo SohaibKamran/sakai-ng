@@ -72,9 +72,9 @@ export class TopBarComponent {
     if (user) {
       this.userMenuItems = [
         {
-          label: 'Profile',
+          label: this.currentUser()?.name,
           icon: 'pi pi-user',
-          routerLink: '/profile' // Assuming a profile route exists or will be added
+          // routerLink: '/profile' // Assuming a profile route exists or will be added
         },
         {
           label: 'Dashboard',
@@ -84,8 +84,8 @@ export class TopBarComponent {
         { separator: true }
       ];
 
-      // Add "Request Author Role" only if the user is a READER and hasn't already requested or been approved/rejected
-      if (user.role === 'READER' && user.authorRequestStatus !== 'PENDING' && user.authorRequestStatus !== 'APPROVED') {
+      // Add "Request Author Role" only if the user is a USER and hasn't already requested or been approved/rejected
+      if (user.role === 'USER' && user.authorRequestStatus !== 'PENDING' && user.authorRequestStatus !== 'APPROVED') {
         this.userMenuItems.push({
           label: 'Request Author Role',
           icon: 'pi pi-pencil',
@@ -110,7 +110,6 @@ export class TopBarComponent {
    */
   toggleDarkMode(): void {
     this.layoutService.layoutConfig.update((state: any) => ({ ...state, darkTheme: !state.darkTheme }));
-    // this.messageService.add({ severity: 'info', summary: 'Theme Changed', detail: `Dark mode ${this.isDarkTheme() ? 'enabled' : 'disabled'}.` });
   }
 
   /**
@@ -121,6 +120,7 @@ export class TopBarComponent {
     this.requestingAuthorRole.set(true); // Set loading state to true
     this.usersService.requestAuthorRole().subscribe({
       next: (res) => {
+        this.authService.updateUserAuthorRequestStatus('PENDING');
         this.messageService.add({ severity: 'success', summary: 'Request Sent', detail: res.message });
         this.requestingAuthorRole.set(false); // Reset loading state
       },
@@ -148,15 +148,15 @@ export class TopBarComponent {
    * @param user The current user object.
    * @returns The initials (e.g., "JD" for John Doe) or "GU" for Guest User.
    */
-  getUserInitials(user: any | null): string {
-    if (!user || !user.username) {
+  getUserInitials(name: string | undefined): string {
+    if (!name ) {
       return 'GU'; // Guest User
     }
-    const parts = user.username.split(' ');
+    const parts = name.split(' ');
     if (parts.length > 1) {
       return (parts[0][0] + parts[1][0]).toUpperCase();
     }
-    return user.username[0].toUpperCase();
+    return name[0].toUpperCase();
   }
 
   /**

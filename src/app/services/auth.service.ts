@@ -25,6 +25,15 @@ export class AuthService {
     this.loadCurrentUserFromToken();
   }
 
+  updateUserAuthorRequestStatus(newStatus: 'PENDING' | 'APPROVED' | 'REJECTED'): void {
+    const currentUser = this.currentUserSignal();
+    if (currentUser) {
+      const updatedUser = { ...currentUser, authorRequestStatus: newStatus };
+      this.currentUserSignal.set(updatedUser); // Update the signal
+      localStorage.setItem('currentUser', JSON.stringify(updatedUser)); // Update localStorage
+    }
+  }
+
   /**
    * Logs in a user.
    * On success, stores the accessToken and updates the currentUserSignal.

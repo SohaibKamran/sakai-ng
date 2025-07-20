@@ -5,14 +5,14 @@
     <form [formGroup]="postForm" (ngSubmit)="onSubmit()" class="p-fluid">
       <div class="field mb-4">
         <label for="title" class="block text-900 font-medium mb-2">Title</label>
-        <input class="w-full" id="title" type="text" pInputText formControlName="title" style="width: 100%;"
+        <input class="w-full" id="title" type="text" pInputText formControlName="title" 
                [ngClass]="{ 'ng-invalid ng-dirty': postForm.get('title')?.invalid && postForm.get('title')?.touched }" />
         <small *ngIf="postForm.get('title')?.invalid && postForm.get('title')?.touched" class="p-error">Title is required.</small>
       </div>
 
       <div class="field mb-4 w-full">
         <label for="excerpt" class="block text-900 font-medium mb-2">Excerpt (Short Summary)</label>
-        <textarea class="w-full" id="excerpt" pInputTextarea formControlName="excerpt" rows="3" style="width: 100%;"
+        <textarea class="w-full" id="excerpt" pInputTextarea formControlName="excerpt" rows="3" 
                   [ngClass]="{ 'ng-invalid ng-dirty': postForm.get('excerpt')?.invalid && postForm.get('excerpt')?.touched }"></textarea>
         <small *ngIf="postForm.get('excerpt')?.invalid && postForm.get('excerpt')?.touched" class="p-error">Excerpt is required.</small>
       </div>

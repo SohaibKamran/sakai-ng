@@ -3,66 +3,183 @@
 <p-confirmDialog></p-confirmDialog>
 
 <div class="p-4">
-  <div class="flex justify-content-between align-items-center mb-4">
-    <h2 class="text-3xl font-bold">Your Dashboard</h2>
-    <p-button label="Create New Post" icon="pi pi-plus" routerLink="/create-post"
-      styleClass="p-button-success"></p-button>
-  </div>
+  <h2 class="text-3xl font-bold mb-4">Your Dashboard</h2>
+  @if (currentUser() && currentUser()?.role === 'ADMIN' || currentUser()?.role === 'AUTHOR') {
+  <p-tabs value="0">
+    <p-tablist>
+      @if (currentUser()?.role === 'ADMIN') {
+      <p-tab value="0">Users</p-tab>
+      }
+      <p-tab value="1">Posts</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      @if (currentUser()?.role === 'ADMIN') {
+      <p-tabpanel value="0">
+        <div class="flex justify-content-between align-items-center mb-4">
+          <h3 class="text-2xl font-semibold">User Management</h3>
+        </div>
+        <p-card styleClass="shadow-2">
+          <p-table [value]="allUsers()" [paginator]="true" [rows]="usersLimit()" [totalRecords]="totalUsers()"
+            [loading]="loadingUsers()" (onPage)="onUsersPageChange($event)" [rowsPerPageOptions]="[10, 20, 50]"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [tableStyle]="{'min-width': '60rem'}" [scrollable]="true" scrollHeight="500px">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 5%;">ID</th>
+                <th style="width: 20%;">Email</th>
+                <th style="width: 15%;">Name</th>
+                <th style="width: 10%;">Role</th>
+                <th style="width: 10%;">Status</th>
+                <th style="width: 15%;">Author Request</th>
+                <th style="width: 15%;">Created At</th>
+                <th style="width: 10%;">Actions</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-user>
+              <tr>
+                <td>{{ user.id.substring(0, 8) }}...</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.name }}</td>
+                <td>
+                  <p-tag [value]="user.role" [severity]="getUserRoleSeverity(user.role)"></p-tag>
+                </td>
+                <td>
+                  <p-tag [value]="user.isBlocked ? 'Blocked' : 'Active'"
+                    [severity]="getUserStatusSeverity(user.isBlocked)"></p-tag>
+                </td>
+                <td>
+                  @if (user.role === 'USER' && user.authorRequestStatus) {
+                  <p-tag [value]="user.authorRequestStatus"
+                    [severity]="getAuthorRequestStatusSeverity(user.authorRequestStatus)"></p-tag>
+                  @if (user.authorRequestStatus === 'PENDING') {
+                  <div class="flex gap-2 mt-2">
+                    <p-button icon="pi pi-check" styleClass="p-button-success p-button-text p-button-sm"
+                      (click)="confirmProcessAuthorRequest(user, 'APPROVED')" pTooltip="Approve Request"
+                      tooltipPosition="bottom"></p-button>
+                    <p-button icon="pi pi-times" styleClass="p-button-danger p-button-text p-button-sm"
+                      (click)="confirmProcessAuthorRequest(user, 'REJECTED')" pTooltip="Reject Request"
+                      tooltipPosition="bottom"></p-button>
+                  </div>
+                  }
+                  } @else if (user.role === 'USER') {
+                  <p-tag value="Not Requested" severity="secondary"></p-tag>
+                  } @else {
+                  <p-tag value="N/A" severity="secondary"></p-tag>
+                  }
+                </td>
+                <td>{{ user.createdAt | date:'shortDate' }}</td>
+                <td>
+                  <div class="flex flex-wrap gap-2">
+                    <p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-text p-button-info"
+                      (click)="showRoleChangeDialog(user)" pTooltip="Change Role" tooltipPosition="bottom"></p-button>
+                    @if (user.isBlocked) {
+                    <p-button icon="pi pi-unlock" styleClass="p-button-rounded p-button-text p-button-success"
+                      (click)="confirmUnblockUser(user)" pTooltip="Unblock User" tooltipPosition="bottom"></p-button>
+                    } @else {
+                    <p-button icon="pi pi-ban" styleClass="p-button-rounded p-button-text p-button-warning"
+                      (click)="confirmBlockUser(user)" pTooltip="Block User" tooltipPosition="bottom"></p-button>
+                    }
+                    <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-text p-button-danger"
+                      (click)="confirmDeleteUser(user)" pTooltip="Delete User" tooltipPosition="bottom"></p-button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="8" class="text-center py-4">No users found.</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-card>
+      </p-tabpanel>
+      }
+      <p-tabpanel value="1">
+        <div class="flex justify-content-between align-items-center mb-4">
+          <h3 class="text-2xl font-semibold">Manage Your Blog Posts</h3>
+          <p-button label="Create New Post" icon="pi pi-plus" routerLink="/create-post"
+            styleClass="p-button-success p-button-sm"></p-button>
+        </div>
 
-  <!-- Conditional display based on user role -->
-  @if (currentUser() && (currentUser()?.role === 'AUTHOR' || currentUser()?.role === 'ADMIN')) {
-  <p-card header="Your Posts" [style]="{'margin-bottom': '2em'}">
-    <p-table [value]="userPosts()" [paginator]="true" [rows]="limit()" [totalRecords]="totalRecords()"
-      [loading]="loadingPosts()" (onPage)="onPageChange($event)" [rowsPerPageOptions]="[5, 10, 20]"
-      [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      [tableStyle]="{'min-width': '50rem'}" [scrollable]="true" scrollHeight="400px">
-      <ng-template pTemplate="header">
-        <tr>
-          <th style="width: 5%;">ID</th>
-          <th style="width: 30%;">Title</th>
-          <th style="width: 20%;">Category</th>
-          <th style="width: 15%;">Status</th>
-          <th style="width: 15%;">Created At</th>
-          <th style="width: 15%;">Actions</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-post>
-        <tr>
-          <td>{{ post.id.substring(0, 8) }}...</td>
-          <td>{{ post.title }}</td>
-          <td>{{ post.category }}</td>
-          <td>
-            <p-tag [value]="post.status" [severity]="post.status === 'PUBLISHED' ? 'success' : 'warning'"></p-tag>
-          </td>
-          <td>{{ post.createdAt | date:'shortDate' }}</td>
-          <td>
-            <p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-text p-button-info mr-2"
-              [routerLink]="['/edit-post', post.id]" pTooltip="Edit Post" tooltipPosition="bottom"></p-button>
-            <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-text p-button-danger"
-              (click)="confirmDelete(post)" pTooltip="Delete Post" tooltipPosition="bottom"></p-button>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="6" class="text-center">No posts found.</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </p-card>
+        <p-card styleClass="shadow-2">
+          <p-table [value]="userPosts()" [paginator]="true" [rows]="limit()" [totalRecords]="totalRecords()"
+            [loading]="loadingPosts()" (onPage)="onPageChange($event)" [rowsPerPageOptions]="[5, 10, 20]"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [tableStyle]="{'min-width': '50rem'}" [scrollable]="true" scrollHeight="400px">
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 5%;">ID</th>
+                <th style="width: 30%;">Title</th>
+                <th style="width: 20%;">Category</th>
+                <th style="width: 15%;">Status</th>
+                <th style="width: 15%;">Created At</th>
+                <th style="width: 15%;">Actions</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-post>
+              <tr>
+                <td>{{ post.id.substring(0, 8) }}...</td>
+                <td>{{ post.title }}</td>
+                <td>{{ post.category }}</td>
+                <td>
+                  <p-tag [value]="post.status" [severity]="post.status === 'PUBLISHED' ? 'success' : 'warning'"></p-tag>
+                </td>
+                <td>{{ post.createdAt | date:'shortDate' }}</td>
+                <td>
+                  <p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-text p-button-info mr-2"
+                    [routerLink]="['/edit-post', post.id]" pTooltip="Edit Post" tooltipPosition="bottom"></p-button>
+                  <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-text p-button-danger"
+                    (click)="confirmDelete(post)" pTooltip="Delete Post" tooltipPosition="bottom"></p-button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="6" class="text-center py-4">No posts found.</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-card>
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
   } @else {
-  <p-card header="Access Denied" [style]="{'margin-bottom': '2em'}">
+  <p-card header="Access Denied" styleClass="shadow-2" class="text-center" >
     <div class="flex flex-column align-items-center justify-content-center p-5">
       <i class="pi pi-lock text-6xl text-400 mb-4"></i>
       <p class="text-xl text-center mb-4">You need to be an Author or Admin to manage posts.</p>
       <p class="text-lg text-center mb-4">
         Your current role is <span class="font-bold">{{ currentUser()?.role || 'Guest' }}</span>.
       </p>
-      <!-- The "Request Author Role" button is now in the TopBarComponent -->
       <p class="text-sm text-center text-500">
         If you wish to become an author, please use the "Request Author Role" option in the top bar menu.
       </p>
     </div>
   </p-card>
   }
+
 </div>
+
+<!-- Dialog for Role Change -->
+<p-dialog header="Change User Role" [(visible)]="displayRoleDialog" [modal]="true" [style]="{width: '30vw'}"
+  [draggable]="false" [resizable]="false">
+  <div class="p-fluid">
+    <div class="field mb-4">
+      <label for="userEmail" class="block text-900 font-medium mb-2">User Email</label>
+      <input id="userEmail" type="text" pInputText [ngModel]="selectedUserForRoleChange?.email" [disabled]="true" />
+    </div>
+    <div class="field mb-4">
+      <label for="newRole" class="block text-900 font-medium mb-2">New Role</label>
+      <p-select [options]="roleOptions" [(ngModel)]="newRole" optionLabel="label" optionValue="value"
+        placeholder="Select a new role" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-text"
+      (click)="displayRoleDialog.set(false)"></p-button>
+    <p-button label="Update Role" icon="pi pi-check" (click)="updateUserRole()"
+      [disabled]="!newRole || newRole === selectedUserForRoleChange?.role"></p-button>
+  </ng-template>
+</p-dialog>
