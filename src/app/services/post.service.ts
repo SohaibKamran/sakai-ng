@@ -40,7 +40,7 @@ export class PostService {
   constructor(private http: HttpClient) { }
 
   /**
-   * Fetches a paginated list of all PUBLISHED blog posts. (Publicly accessible)
+   * Fetches a paginated list of all PUBLISHED post posts. (Publicly accessible)
    * @param page The current page number.
    * @param limit The number of items per page.
    * @returns An Observable of PaginatedPostsResponse.
@@ -54,7 +54,7 @@ export class PostService {
   }
 
   /**
-   * Fetches a single blog post by its ID.
+   * Fetches a single post post by its ID.
    * Assumes the API returns the Post object directly (not wrapped in 'data').
    * @param id The ID of the post to fetch.
    * @returns An Observable of a single Post object.
@@ -64,7 +64,7 @@ export class PostService {
   }
 
   /**
-   * Fetches a paginated list of blog posts *by the authenticated user*.
+   * Fetches a paginated list of post posts *by the authenticated user*.
    * This corresponds to the backend's `/posts/my-posts` endpoint.
    * @param page The current page number.
    * @param limit The number of items per page.

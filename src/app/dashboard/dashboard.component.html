@@ -1,85 +1,68 @@
+<!-- frontend/src/app/dashboard/dashboard.component.html -->
 <p-toast></p-toast>
-<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="1000"></p-confirmDialog>
+<p-confirmDialog></p-confirmDialog>
 
-<app-floating-configurator />
-<div class="container mx-auto p-4">
-  <h1 class="text-4xl font-bold mb-8 text-center text-primary">Your Dashboard</h1>
+<div class="p-4">
+  <div class="flex justify-content-between align-items-center mb-4">
+    <h2 class="text-3xl font-bold">Your Dashboard</h2>
+    <p-button label="Create New Post" icon="pi pi-plus" routerLink="/create-post"
+      styleClass="p-button-success"></p-button>
+  </div>
 
-  <p-card header="User Information" styleClass="mb-6">
-    <div *ngIf="currentUser()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div><strong>Name:</strong> {{ currentUser()!.name }}</div>
-      <div><strong>Email:</strong> {{ currentUser()!.email }}</div>
-      <div><strong>Role:</strong> {{ currentUser()!.role }}</div>
-      @if (currentUser()!.role === 'USER') {
-      <div>
-        <strong>Author Request Status:</strong>
-        <p-tag [value]="currentUser()!.authorRequestStatus || 'Not Requested'"
-          [severity]="getAuthorRequestStatusSeverity(currentUser()!.authorRequestStatus)">
-        </p-tag>
-      </div>
-      @if (currentUser()!.authorRequestStatus !== 'PENDING' && currentUser()!.authorRequestStatus !== 'APPROVED') {
-      <div class="col-span-2 mt-4">
-        <p-button label="Request Author Role" icon="pi pi-briefcase" (click)="onRequestAuthorRole()"
-          [loading]="requestingAuthorRole()" [disabled]="requestingAuthorRole()"></p-button>
-      </div>
-      } @else if (currentUser()!.authorRequestStatus === 'APPROVED') {
-      <div class="col-span-2 mt-4 text-success-500 font-medium">
-        You are an approved Author! You can now manage your posts.
-      </div>
-      }
-      }
-      <div class="col-span-2 mt-4">
-        <p-button label="Logout" icon="pi pi-briefcase" (click)="logout()"></p-button>
-      </div>
-    </div>
-    <div *ngIf="!currentUser()" class="text-muted-color">Loading user data...</div>
-  </p-card>
-
-  @if (currentUser() && (currentUser()!.role === 'AUTHOR' || currentUser()!.role === 'ADMIN')) {
-  <p-card header="Manage Your Blog Posts" styleClass="mb-6">
-    <div class="flex justify-content-end mb-4">
-      <p-button label="Create New Blog" icon="pi pi-plus" [routerLink]="['/create-post']"></p-button>
-    </div>
-
+  <!-- Conditional display based on user role -->
+  @if (currentUser() && (currentUser()?.role === 'AUTHOR' || currentUser()?.role === 'ADMIN')) {
+  <p-card header="Your Posts" [style]="{'margin-bottom': '2em'}">
     <p-table [value]="userPosts()" [paginator]="true" [rows]="limit()" [totalRecords]="totalRecords()"
-      (onPage)="onPageChange($event)" [lazy]="true" [showCurrentPageReport]="true"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[5, 10, 20]"
-      [loading]="loadingPosts()" styleClass="p-datatable-gridlines" [tableStyle]="{'min-width': '50rem'}">
+      [loading]="loadingPosts()" (onPage)="onPageChange($event)" [rowsPerPageOptions]="[5, 10, 20]"
+      [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [tableStyle]="{'min-width': '50rem'}" [scrollable]="true" scrollHeight="400px">
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="title" style="width: 40%">Title <p-sortIcon field="title"></p-sortIcon></th>
-          <th pSortableColumn="published" style="width: 15%">Status <p-sortIcon field="published"></p-sortIcon></th>
-          <th pSortableColumn="createdAt" style="width: 20%">Created At <p-sortIcon field="createdAt"></p-sortIcon></th>
-          <th style="width: 25%" class="text-center">Actions</th>
+          <th style="width: 5%;">ID</th>
+          <th style="width: 30%;">Title</th>
+          <th style="width: 20%;">Category</th>
+          <th style="width: 15%;">Status</th>
+          <th style="width: 15%;">Created At</th>
+          <th style="width: 15%;">Actions</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-post>
         <tr>
+          <td>{{ post.id.substring(0, 8) }}...</td>
+          <td>{{ post.title }}</td>
+          <td>{{ post.category }}</td>
           <td>
-            <a [routerLink]="['/posts', post.id]"
-              class="text-primary-500 hover:text-primary-600 font-medium no-underline">
-              {{ post.title }}
-            </a>
+            <p-tag [value]="post.status" [severity]="post.status === 'PUBLISHED' ? 'success' : 'warning'"></p-tag>
           </td>
+          <td>{{ post.createdAt | date:'shortDate' }}</td>
           <td>
-            <p-tag [value]="post.published ? 'Published' : 'Draft'"
-              [severity]="post.published ? 'success' : 'warning'"></p-tag>
-          </td>
-          <td>{{ post.createdAt | date:'medium' }}</td>
-          <td class="text-center">
-            <p-button icon="pi pi-pencil" styleClass="p-button-sm p-button-info mr-2"
-              [routerLink]="['/edit-post', post.id]" tooltipPosition="top" pTooltip="Edit Post"></p-button>
-            <p-button icon="pi pi-trash" styleClass="p-button-sm p-button-danger" (click)="confirmDelete(post)"
-              tooltipPosition="top" pTooltip="Delete Post"></p-button>
+            <p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-text p-button-info mr-2"
+              [routerLink]="['/edit-post', post.id]" pTooltip="Edit Post" tooltipPosition="bottom"></p-button>
+            <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-text p-button-danger"
+              (click)="confirmDelete(post)" pTooltip="Delete Post" tooltipPosition="bottom"></p-button>
           </td>
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="4" class="text-center">No posts found for your account. Start by creating one!</td>
+          <td colspan="6" class="text-center">No posts found.</td>
         </tr>
       </ng-template>
     </p-table>
+  </p-card>
+  } @else {
+  <p-card header="Access Denied" [style]="{'margin-bottom': '2em'}">
+    <div class="flex flex-column align-items-center justify-content-center p-5">
+      <i class="pi pi-lock text-6xl text-400 mb-4"></i>
+      <p class="text-xl text-center mb-4">You need to be an Author or Admin to manage posts.</p>
+      <p class="text-lg text-center mb-4">
+        Your current role is <span class="font-bold">{{ currentUser()?.role || 'Guest' }}</span>.
+      </p>
+      <!-- The "Request Author Role" button is now in the TopBarComponent -->
+      <p class="text-sm text-center text-500">
+        If you wish to become an author, please use the "Request Author Role" option in the top bar menu.
+      </p>
+    </div>
   </p-card>
   }
 </div>

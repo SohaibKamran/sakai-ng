@@ -33,7 +33,7 @@ import { EditorModule } from 'primeng/editor'; // For rich text editor (install 
   template: `
     <div class="container mx-auto p-4">
       <h1 class="text-3xl font-bold mb-6 text-center text-primary">
-        {{ isEditMode() ? 'Edit Blog Post' : 'Create New Blog Post' }}
+        {{ isEditMode() ? 'Edit post Post' : 'Create New post Post' }}
       </h1>
 
       <form [formGroup]="postForm" (ngSubmit)="onSubmit()" class="p-fluid">

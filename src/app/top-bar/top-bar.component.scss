@@ -1,0 +1,48 @@
+/* frontend/src/app/top-bar/top-bar.component.scss */
+.top-bar-container {
+    // Using PrimeFlex/Tailwind classes for responsive layout, but adding some custom styles for fine-tuning
+    width: 100%;
+    box-sizing: border-box; // Include padding in width
+    z-index: 1000; // Ensure it stays on top of other content
+    position: sticky; // Make it sticky at the top
+    top: 0;
+    left: 0;
+}
+
+// Custom styles for PrimeNG components if needed, otherwise rely on PrimeFlex/Tailwind
+:host ::ng-deep {
+    .p-avatar {
+        cursor: pointer;
+        transition: transform 0.2s ease-in-out;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+
+    .p-menu {
+        .p-menuitem-link {
+            display: flex;
+            align-items: center;
+            gap: 8px; // Space between icon and label
+        }
+    }
+
+    // Adjust button styles if needed
+    .p-button {
+        border-radius: 8px; // Rounded corners for buttons
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    // Adjust tag styles
+    .p-tag {
+        border-radius: 8px;
+        font-size: 0.85rem;
+        padding: 0.3em 0.6em;
+    }
+}

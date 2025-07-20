@@ -53,7 +53,7 @@ import { Router, RouterModule } from '@angular/router';
                             <a class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">Discord</a>
                             <a class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">Events<img src="https://primefaces.org/cdn/templates/sakai/landing/new-badge.svg" alt="badge" class="ml-2" /></a>
                             <a class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">FAQ</a>
-                            <a class="leading-normal text-xl block cursor-pointer text-surface-700 dark:text-surface-100">Blog</a>
+                            <a class="leading-normal text-xl block cursor-pointer text-surface-700 dark:text-surface-100">post</a>
                         </div>
 
                         <div class="col-span-12 md:col-span-3">

@@ -1,0 +1,42 @@
+<!-- frontend/src/app/top-bar/top-bar.component.html -->
+<p-toast></p-toast>
+<div
+    class="top-bar-container bg-primary-800 text-white shadow-2 py-3 px-4 flex align-items-center justify-content-between">
+    <!-- Left section: Logo/App Name -->
+    <div class="flex align-items-center">
+        <a routerLink="/post" class="text-white no-underline text-2xl font-bold mr-4">
+            <i class="pi pi-book mr-2"></i>Posts App
+        </a>
+    </div>
+
+    <!-- Right section: User Avatar and Dropdown -->
+    <div class="flex align-items-center gap-3">
+        <!-- Display user role tag if logged in -->
+        @if (currentUser()) {
+        <p-tag [value]="currentUser()?.role"
+            [severity]="currentUser()?.role === 'ADMIN' ? 'danger' : (currentUser()?.role === 'AUTHOR' ? 'success' : 'info')"
+            class="mr-2" [pTooltip]="'Your current role: ' + currentUser()?.role" tooltipPosition="bottom"></p-tag>
+
+        <!-- Display author request status tag if applicable -->
+        @if (currentUser()?.authorRequestStatus && currentUser()?.role === 'USER') {
+        <p-tag [value]="'Author Req: ' + currentUser()?.authorRequestStatus"
+            [severity]="getAuthorRequestStatusSeverity(currentUser()?.authorRequestStatus)"
+            [pTooltip]="'Author request status: ' + currentUser()?.authorRequestStatus"
+            tooltipPosition="bottom"></p-tag>
+        }
+
+        <span class="font-medium text-lg mr-2 hidden md:block">{{ currentUser()?.name || currentUser()?.email }}</span>
+        <p-toggleswitch  (onChange)="toggleDarkMode()"></p-toggleswitch>
+        <p-avatar [label]="getUserInitials(currentUser())" styleClass="mr-2" size="large" shape="circle"
+            [style]="{'background-color': '#9c27b0', 'color': '#ffffff', 'cursor': 'pointer'}"
+            (click)="menu.toggle($event)" [pTooltip]="currentUser()?.name || currentUser()?.email"
+            tooltipPosition="bottom"></p-avatar>
+        <p-menu #menu [model]="userMenuItems" [popup]="true"></p-menu>
+        } @else {
+        <!-- Login/Register buttons if not logged in -->
+        <p-button label="Login" icon="pi pi-sign-in" styleClass="p-button-text p-button-sm"
+            routerLink="/login"></p-button>
+        <p-button label="Register" icon="pi pi-user-plus" styleClass="p-button-sm" routerLink="/register"></p-button>
+        }
+    </div>
+</div>

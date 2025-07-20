@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Post, PostService } from '../services/post.service';
 import { CommonModule, DatePipe } from '@angular/common'; // Import CommonModule and DatePipe
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser'; // For sanitizing HTML content
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-post-detail',
